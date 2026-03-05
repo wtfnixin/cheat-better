@@ -1,6 +1,20 @@
+'use client';
+
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
 export default function Home() {
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <div className="relative min-h-screen w-full overflow-hidden bg-[#c8e4ec] font-sans">
       {/* Ellipse 39 - Larger decorative orb */}
@@ -58,11 +72,11 @@ export default function Home() {
 
       {/* Background Decorative Blob - Bottom Wave */}
       <div 
-        className="absolute rounded-full z-0"
+        className="absolute rounded-full z-[1]"
         style={{ 
           width: '4122px', 
           height: '4122px', 
-          top: '700px', 
+          top: '900px', 
           left: '50%',
           transform: 'translateX(-50%)',
           background: 'linear-gradient(to bottom, #DFF3FF, #9ACDDE)',
@@ -71,7 +85,7 @@ export default function Home() {
       />
 
       {/* Logo */}
-      <div className="absolute z-30" style={{ top: '40px', left: '70px' }}>
+      <div className="fixed z-[100]" style={{ top: '40px', left: '70px' }}>
         <Image
           src="/logo.png"
           alt="Logo"
@@ -82,7 +96,17 @@ export default function Home() {
       </div>
 
       {/* Navigation */}
-      <nav className="absolute left-0 right-0 top-0 z-20 w-full">
+      <nav 
+        className={`fixed left-0 right-0 top-0 z-[100] w-full transition-all duration-700 ease-in-out ${
+          isScrolled ? 'shadow-2xl' : ''
+        }`} 
+        style={{
+          backdropFilter: isScrolled ? 'blur(20px) saturate(180%)' : 'none',
+          WebkitBackdropFilter: isScrolled ? 'blur(20px) saturate(180%)' : 'none',
+          backgroundColor: isScrolled ? 'rgba(200, 228, 236, 0.6)' : 'transparent',
+          borderBottom: isScrolled ? '1px solid rgba(255, 255, 255, 0.3)' : 'none',
+        }}
+      >
         <ul 
           className="absolute flex items-center justify-between text-base font-semibold tracking-wider text-black"
           style={{ width: '650px', height: '42px', top: '35px', left: '50%', transform: 'translateX(-50%)' }}
@@ -165,7 +189,7 @@ export default function Home() {
       </main>
 
       {/* Floating Bottom Stats */}
-      <div className="absolute z-20 flex gap-16" style={{ top: '650px', left: '900px' }}>
+      <div className="absolute z-[30] flex gap-16" style={{ top: '650px', left: '900px' }}>
         <div className="flex flex-col">
           <span className="text-xl font-bold text-black">50 km/hr</span>
           <span className="text-xs font-medium text-black/60">speed</span>
@@ -181,140 +205,440 @@ export default function Home() {
       </div>
 
       {/* Prev/Next Navigation */}
-      <div className="absolute bottom-6 left-0 right-0 z-20 flex items-center justify-between px-20">
+      <div className="absolute z-[50] flex items-center justify-between px-20" style={{ top: '750px', left: '0', right: '0' }}>
         <button className="flex items-center gap-2 text-sm font-medium text-black/70 hover:text-black">
-          <span>&lt;</span> Prev
+          <span className="text-lg">&lt;</span> Prev
         </button>
-        <div className="flex gap-2">
-          <span className="h-2 w-2 rounded-full bg-black/30"></span>
-          <span className="h-2 w-2 rounded-full bg-black/30"></span>
-          <span className="h-2 w-2 rounded-full bg-black/30"></span>
-          <span className="h-2 w-2 rounded-full bg-black/30"></span>
+        <div className="flex items-center gap-4">
+          <button className="flex items-center gap-2 text-sm font-medium text-black/70 hover:text-black">
+            Next <span className="text-lg">&gt;</span>
+          </button>
+          <div 
+            className="rounded-full"
+            style={{ 
+              width: '60px', 
+              height: '60px', 
+              background: 'linear-gradient(to bottom, #DFF3FF, #9ACDDE)',
+              boxShadow: '2px 4px 10px rgba(131, 196, 220, 0.4)'
+            }}
+          />
         </div>
-        <button className="flex items-center gap-2 text-sm font-medium text-black/70 hover:text-black">
-          Next <span>&gt;</span>
-        </button>
       </div>
 
       {/* Second Section - Book Test Drive */}
-      <section className="relative z-10 w-full px-16 py-20" style={{ marginTop: '100vh' }}>
+      <section className="relative z-10 w-full px-16 py-20" style={{ marginTop: '200px' }}>
         {/* Book Test Drive Header */}
         <div className="flex flex-col items-center text-center">
-          <h3 className="text-lg font-semibold tracking-[0.3em] text-[#4A9DAD]">
+          <h3 className="text-xl font-semibold tracking-[0.4em] text-black">
             B O O K &nbsp; T E S T &nbsp; D R I V E
           </h3>
-          <h2 className="mt-2 text-5xl font-bold text-black">
+          <h2 className="mt-4 text-6xl font-bold text-black">
             ACROSS WORLD
           </h2>
-          <p className="mt-4 text-sm text-black/60">
+          <p className="mt-6 text-base text-black/60">
             Simple and sleek design<br />with users in mind.
           </p>
         </div>
 
         {/* World Map */}
-        <div className="mt-12 flex justify-center">
-          <div className="relative h-[300px] w-[400px]">
-            {/* Dotted world map - using CSS pattern */}
-            <svg viewBox="0 0 400 200" className="h-full w-full">
-              <defs>
-                <pattern id="dots" x="0" y="0" width="8" height="8" patternUnits="userSpaceOnUse">
-                  <circle cx="2" cy="2" r="1.5" fill="#2d3748" />
-                </pattern>
-                <clipPath id="worldClip">
-                  {/* Simplified world map shape */}
-                  <ellipse cx="200" cy="100" rx="180" ry="90" />
-                </clipPath>
-              </defs>
-              {/* World continents approximation with dot pattern */}
-              <g fill="url(#dots)" clipPath="url(#worldClip)">
-                {/* North America */}
-                <path d="M40,30 Q80,20 120,40 Q140,60 130,90 Q100,100 60,80 Q30,60 40,30" />
-                {/* South America */}
-                <path d="M100,110 Q120,100 130,120 Q140,160 110,180 Q90,170 95,140 Q90,120 100,110" />
-                {/* Europe */}
-                <path d="M180,30 Q210,25 230,40 Q235,55 220,65 Q200,60 180,50 Q175,40 180,30" />
-                {/* Africa */}
-                <path d="M190,70 Q220,65 240,90 Q245,130 220,160 Q190,165 180,130 Q175,100 190,70" />
-                {/* Asia */}
-                <path d="M250,20 Q320,15 360,50 Q370,90 340,100 Q300,95 270,70 Q250,50 250,20" />
-                {/* Australia */}
-                <path d="M320,130 Q350,125 365,145 Q360,165 335,170 Q315,160 320,130" />
-              </g>
-            </svg>
-          </div>
+        <div className="mt-16 flex justify-center">
+          <Image
+            src="/world.png"
+            alt="World Map"
+            width={600}
+            height={450}
+            className="object-contain"
+          />
         </div>
 
         {/* Feature Boxes Section */}
         <div className="mt-20 flex flex-col items-center">
           <h3 className="text-3xl font-bold text-black">Feature Boxes</h3>
-          <p className="mt-4 max-w-md text-center text-sm text-black/60">
+          <p className="mt-4 max-w-md text-center text-sm font-bold text-black">
             A good design is not only aesthetically pleasing, but also functional. It should be able to solve the problem
           </p>
 
           {/* Feature Grid */}
           <div className="mt-10 grid grid-cols-2 gap-6">
             {/* Feature Box 1 */}
-            <div className="flex w-[280px] flex-col items-center rounded-xl bg-[#b8dce6] p-6 text-center">
-              <div className="mb-4 text-3xl text-[#4A9DAD]">
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <rect x="2" y="3" width="20" height="14" rx="2" />
-                  <path d="M8 21h8" />
-                  <path d="M12 17v4" />
-                </svg>
+            <div className="flex w-[280px] flex-col items-center rounded-xl bg-[#ACCCDA] p-6 text-center">
+              <div className="mb-4">
+                <Image
+                  src="/feature boxes (1).png"
+                  alt="Feature 1"
+                  width={40}
+                  height={40}
+                  className="object-contain"
+                />
               </div>
               <h4 className="text-lg font-semibold text-black">Fully Customizable</h4>
-              <p className="mt-2 text-xs text-black/60">
+              <p className="mt-2 text-xs  text-black">
                 A good design is not only aesthetically pleasing, but also functional. It should be able to solve the problem
               </p>
             </div>
 
             {/* Feature Box 2 */}
-            <div className="flex w-[280px] flex-col items-center rounded-xl bg-[#b8dce6] p-6 text-center">
-              <div className="mb-4 text-3xl text-[#4A9DAD]">
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M4 12c0-4 4-8 8-8s8 4 8 8" />
-                  <path d="M4 12c0 4 4 8 8 8s8-4 8-8" />
-                  <circle cx="12" cy="12" r="3" />
-                </svg>
+            <div className="flex w-[280px] flex-col items-center rounded-xl bg-[#ACCCDA] p-6 text-center">
+              <div className="mb-4">
+                <Image
+                  src="/feature boxes (2).png"
+                  alt="Feature 2"
+                  width={40}
+                  height={40}
+                  className="object-contain"
+                />
               </div>
               <h4 className="text-lg font-semibold text-black">Fully Customizable</h4>
-              <p className="mt-2 text-xs text-black/60">
+              <p className="mt-2 text-xs  text-black">
                 A good design is not only aesthetically pleasing, but also functional. It should be able to solve the problem
               </p>
             </div>
 
             {/* Feature Box 3 */}
-            <div className="flex w-[280px] flex-col items-center rounded-xl bg-[#b8dce6] p-6 text-center">
-              <div className="mb-4 text-3xl text-[#4A9DAD]">
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M12 2L2 7l10 5 10-5-10-5z" />
-                  <path d="M2 17l10 5 10-5" />
-                  <path d="M2 12l10 5 10-5" />
-                </svg>
+            <div className="flex w-[280px] flex-col items-center rounded-xl bg-[#ACCCDA] p-6 text-center">
+              <div className="mb-4">
+                <Image
+                  src="/feature boxes (3).png"
+                  alt="Feature 3"
+                  width={40}
+                  height={40}
+                  className="object-contain"
+                />
               </div>
               <h4 className="text-lg font-semibold text-black">Fully Customizable</h4>
-              <p className="mt-2 text-xs text-black/60">
+              <p className="mt-2 text-xs  text-black">
                 A good design is not only aesthetically pleasing, but also functional. It should be able to solve the problem
               </p>
             </div>
 
             {/* Feature Box 4 */}
-            <div className="flex w-[280px] flex-col items-center rounded-xl bg-[#b8dce6] p-6 text-center">
-              <div className="mb-4 text-3xl text-[#4A9DAD]">
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <rect x="3" y="3" width="18" height="18" rx="2" />
-                  <circle cx="8.5" cy="8.5" r="1.5" />
-                  <path d="M21 15l-5-5L5 21" />
-                </svg>
+            <div className="flex w-[280px] flex-col items-center rounded-xl bg-[#ACCCDA] p-6 text-center">
+              <div className="mb-4">
+                <Image
+                  src="/feature boxes (4).png"
+                  alt="Feature 4"
+                  width={40}
+                  height={40}
+                  className="object-contain"
+                />
               </div>
               <h4 className="text-lg font-semibold text-black">Fully Customizable</h4>
-              <p className="mt-2 text-xs text-black/60">
+              <p className="mt-2 text-xs  text-black">
                 A good design is not only aesthetically pleasing, but also functional. It should be able to solve the problem
               </p>
             </div>
           </div>
         </div>
       </section>
+
+      {/* Pricing Section - Our Best Prices */}
+      <section className="relative z-10 w-full px-16 py-20">
+        <div className="flex flex-col items-center text-center">
+          <h2 className="text-5xl font-bold text-black">
+            Our Best Prices
+          </h2>
+          <p className="mt-6 max-w-lg text-base text-black/70">
+            A good design is not only aesthetically pleasing, but also<br />functional. It should be able to solve the problem
+          </p>
+        </div>
+
+        {/* Pricing Cards */}
+        <div className="mt-16 flex justify-center gap-8">
+          {/* Golden Package */}
+          <div className="flex w-[280px] flex-col rounded-2xl bg-[#ACCCDA] p-8">
+            {/* Icon Circle */}
+            <div className="mx-auto mb-4 h-16 w-16 rounded-full bg-[#2B2B2B]"></div>
+            <h3 className="text-center text-lg font-semibold text-black">Golden Package</h3>
+            
+            {/* Divider */}
+            <div className="my-6 h-px bg-black/20"></div>
+            
+            {/* Features List */}
+            <div className="mb-6 flex flex-col gap-3">
+              <div className="flex items-center gap-3">
+                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#2B2B2B]">
+                  <svg className="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <span className="text-sm text-black">100 + Free Template</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#2B2B2B]">
+                  <svg className="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <span className="text-sm text-black">10 Team Members</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#2B2B2B]">
+                  <svg className="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <span className="text-sm text-black">Priority Support</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#2B2B2B]">
+                  <svg className="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <span className="text-sm text-black">Premium Features</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#2B2B2B]">
+                  <svg className="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <span className="text-sm text-black">50 Integrations</span>
+              </div>
+            </div>
+            
+            {/* Divider */}
+            <div className="my-6 h-px bg-black/20"></div>
+            
+            {/* Price and Button */}
+            <div className="flex items-center justify-between">
+              <span className="text-4xl font-bold" style={{ color: '#3B3B3B' }}>$70</span>
+              <button className="rounded-lg bg-black px-6 py-2 text-sm font-medium text-white transition-colors hover:bg-gray-800">
+                book now
+              </button>
+            </div>
+          </div>
+
+          {/* Silver Package */}
+          <div className="flex w-[280px] flex-col rounded-2xl bg-[#B4D8E4] p-8">
+            {/* Icon Circle */}
+            <div className="mx-auto mb-4 h-16 w-16 rounded-full bg-[#2B2B2B]"></div>
+            <h3 className="text-center text-lg font-semibold text-black">Silver Package</h3>
+            
+            {/* Divider */}
+            <div className="my-6 h-px bg-black/20"></div>
+            
+            {/* Features List */}
+            <div className="mb-6 flex flex-col gap-3">
+              <div className="flex items-center gap-3">
+                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#2B2B2B]">
+                  <svg className="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <span className="text-sm text-black">100 + Free Template</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#2B2B2B]">
+                  <svg className="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <span className="text-sm text-black">10 Team Members</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#2B2B2B]">
+                  <svg className="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <span className="text-sm text-black">Priority Support</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#2B2B2B]">
+                  <svg className="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <span className="text-sm text-black">Premium Features</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#2B2B2B]">
+                  <svg className="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <span className="text-sm text-black">50 Integrations</span>
+              </div>
+            </div>
+            
+            {/* Divider */}
+            <div className="my-6 h-px bg-black/20"></div>
+            
+            {/* Price and Button */}
+            <div className="flex items-center justify-between">
+              <span className="text-4xl font-bold" style={{ color: '#3B3B3B' }}>$40</span>
+              <button className="rounded-lg bg-black px-6 py-2 text-sm font-medium text-white transition-colors hover:bg-gray-800">
+                book now
+              </button>
+            </div>
+          </div>
+
+          {/* Premium Package */}
+          <div className="flex w-[280px] flex-col rounded-2xl bg-[#D8E6EF] p-8">
+            {/* Icon Circle */}
+            <div className="mx-auto mb-4 h-16 w-16 rounded-full bg-[#2B2B2B]"></div>
+            <h3 className="text-center text-lg font-semibold text-black">Premium Package</h3>
+            
+            {/* Divider */}
+            <div className="my-6 h-px bg-black/20"></div>
+            
+            {/* Features List */}
+            <div className="mb-6 flex flex-col gap-3">
+              <div className="flex items-center gap-3">
+                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#2B2B2B]">
+                  <svg className="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <span className="text-sm text-black">100 + Free Template</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#2B2B2B]">
+                  <svg className="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <span className="text-sm text-black">10 Team Members</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#2B2B2B]">
+                  <svg className="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <span className="text-sm text-black">Priority Support</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#2B2B2B]">
+                  <svg className="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <span className="text-sm text-black">Premium Features</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#2B2B2B]">
+                  <svg className="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <span className="text-sm text-black">50 Integrations</span>
+              </div>
+            </div>
+            
+            {/* Divider */}
+            <div className="my-6 h-px bg-black/20"></div>
+            
+            {/* Price and Button */}
+            <div className="flex items-center justify-between">
+              <span className="text-4xl font-bold" style={{ color: '#3B3B3B' }}>$120</span>
+              <button className="rounded-lg bg-black px-6 py-2 text-sm font-medium text-white transition-colors hover:bg-gray-800">
+                book now
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Section */}
+      <section className="relative z-10 w-full px-16 py-20 overflow-hidden" style={{ marginBottom: '100px' }}>
+        {/* Decorative Ellipses for Contact Section */}
+        <div 
+          className="absolute z-[20] rounded-full"
+          style={{ 
+            width: '250px', 
+            height: '250px', 
+            top: '50px', 
+            right: '100px',
+            background: 'linear-gradient(to bottom, #DFF3FF, #9ACDDE)',
+            boxShadow: '9px 59px 90px 0px rgba(131, 196, 220, 0.47)',
+            opacity: 0.7
+          }} 
+        />
+        <div 
+          className="absolute z-[20] rounded-full"
+          style={{ 
+            width: '150px', 
+            height: '150px', 
+            top: '80px', 
+            right: '280px',
+            background: 'linear-gradient(to bottom, #DFF3FF, #9ACDDE)',
+            boxShadow: '9px 59px 90px 0px rgba(131, 196, 220, 0.47)',
+            opacity: 0.6
+          }} 
+        />
+
+        <div className="relative z-10 mx-auto" style={{ maxWidth: '1400px' }}>
+          {/* Main Contact Box with exact Figma specs */}
+          <div 
+            style={{
+              width: '1200px',
+              height: '633px',
+              borderRadius: '108px',
+              background: 'rgba(53, 167, 160, 0.37)',
+              border: '1px solid rgba(110, 218, 200, 0.5)',
+              backdropFilter: 'blur(25px) saturate(150%)',
+              WebkitBackdropFilter: 'blur(25px) saturate(150%)',
+              position: 'relative',
+              margin: '0 auto',
+              boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.25), inset 0 0 80px rgba(255, 255, 255, 0.1)'
+            }}
+          >
+            <div className="absolute inset-0 flex flex-col px-16 py-12">
+              {/* To contact heading - inside the box */}
+              <h2 className="mb-8 mt-12 text-5xl font-bold text-black">To contact</h2>
+              
+              <div className="flex items-center justify-between">
+                {/* Left Side - Contact Form */}
+                <div className="w-[45%]">
+                  <div className="rounded-[60px] bg-[#7DB8C9]/70 p-12 backdrop-blur-sm">
+                    <div className="flex flex-col gap-4">
+                      <input 
+                        type="email" 
+                        placeholder="your mail" 
+                        className="w-full rounded-full border-2 border-black bg-[#9DCFDC] px-6 py-4 text-sm text-black placeholder-black/80 outline-none focus:border-black"
+                      />
+                      <input 
+                        type="text" 
+                        placeholder="name" 
+                        className="w-full rounded-full border-2 border-black bg-[#9DCFDC] px-6 py-4 text-sm text-black placeholder-black/80 outline-none focus:border-black"
+                      />
+                      <input 
+                        type="text" 
+                        placeholder="address" 
+                        className="w-full rounded-full border-2 border-black bg-[#9DCFDC] px-6 py-4 text-sm text-black placeholder-black/80 outline-none focus:border-black"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Right Side - Bike Image */}
+                <div className="w-[50%]">
+                  <Image
+                    src="/bike.png"
+                    alt="Electric Bike"
+                    width={550}
+                    height={450}
+                    className="object-contain"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer Section */}
+      <footer className="relative z-10 w-full flex justify-center py-16">
+        <Image
+          src="/group249.png"
+          alt="Footer"
+          width={1500}
+          height={400}
+          className="object-contain"
+        />
+      </footer>
     </div>
   );
 }
