@@ -1,0 +1,232 @@
+@import "tailwindcss";
+
+
+@theme inline {
+  --color-background: #f2f2f2;
+  --color-foreground: #000000;
+  --color-border: #d0d0d0;
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-gray-light: #f2f2f2;
+  --color-gray-medium: #999999;
+  --color-overlay: rgba(0, 0, 0, 0.4);
+  --font-sans: 'DM Sans', sans-serif;
+  --font-serif: 'Playfair Display', serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  overflow: hidden;
+  height: 100%;
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+  overflow: hidden;
+  height: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+
+/* Transition utilities */
+.transition-transform-opacity {
+  transition: transform 0.1s linear, opacity 0.3s ease;
+}
+
+/* Product card in spazio */
+.product-item {
+  position: absolute;
+  cursor: pointer;
+  will-change: transform, opacity;
+  transition: transform 0.05s linear;
+}
+
+.product-item:hover .product-name-tooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.product-name-tooltip {
+  position: absolute;
+  bottom: -30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(5px);
+  background: #000;
+  color: #fff;
+  padding: 4px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  pointer-events: none;
+}
+
+/* Grid view */
+.grid-cell {
+  border: 1px solid #d0d0d0;
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-background);
+  transition: background 0.3s ease;
+}
+
+.grid-cell:hover {
+  background: #e8e8e8;
+}
+
+.grid-cell:hover .grid-product-name {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.grid-product-name {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  padding: 10px;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  background: #fff;
+  border-top: 1px solid #d0d0d0;
+  opacity: 0;
+  transform: translateY(100%);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Navigation overlay */
+.nav-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+.nav-overlay.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.nav-overlay .backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.nav-overlay .nav-content {
+  position: relative;
+  background: #fff;
+  width: 440px;
+  max-width: 90vw;
+  padding: 60px 40px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: scale(0.95);
+  opacity: 0;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+}
+
+.nav-overlay.open .nav-content {
+  transform: scale(1);
+  opacity: 1;
+}
+
+/* Header */
+.site-header {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+  background: #fff;
+  border: 1px solid #d0d0d0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+  width: 440px;
+  max-width: 90vw;
+}
+
+/* View toggle */
+.view-toggle {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+  display: flex;
+  border: 1px solid #d0d0d0;
+  overflow: hidden;
+}
+
+.view-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 24px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border: none;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.view-toggle-btn.active {
+  background: #000;
+  color: #fff;
+}
+
+.view-toggle-btn:not(.active) {
+  background: #fff;
+  color: #000;
+}
+
+/* Product SVG placeholders */
+.product-svg-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.product-svg-wrapper svg,
+.product-svg-wrapper img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
