@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+@layer utilities {
+  .clip-wave {
+    clip-path: polygon(100% 0, 100% 100%, 0% 100%, 0% 50%, 8% 48%, 18% 47%, 28% 47%, 36% 47%, 50% 50%, 61% 54%, 72% 56%, 84% 56%, 100% 50%);
+  }
+}
+
+body {
+  font-family: var(--font-inter), 'Inter', ui-sans-serif, system-ui, sans-serif;
+  background: linear-gradient(135deg, #D9EAFD 0%, #A8DADC 100%);
+  color: #000;
+  overflow-x: hidden;
+}

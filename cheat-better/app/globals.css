@@ -1,0 +1,18 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+@layer utilities {
+  .clip-wave {
+    clip-path: ellipse(80% 100% at 70% 100%);
+  }
+}
+
+body {
+  background: #c5e4eb;
+  color: #000;
+  overflow-x: hidden;
+}
